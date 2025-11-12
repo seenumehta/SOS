@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 School Management System</h1>
+            <p>Complete solution for managing students, fees, library, marks, and attendance</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('students')">Students</button>
+            <button class="nav-tab" onclick="showSection('fees')">Fees</button>
+            <button class="nav-tab" onclick="showSection('library')">Library</button>
+            <button class="nav-tab" onclick="showSection('marks')">Marks</button>
+            <button class="nav-tab" onclick="showSection('attendance')">Attendance</button>
+        </div>
+
+        <div class="content">
+            <!-- Students Section -->
+            <div id="students" class="section active">
+                <div class="section-header">
+                    <h2 class="section-title">Students Management</h2>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <input type="text" class="search-box" placeholder="Search students..." onkeyup="searchStudents(this.value)">
+                        <button class="btn btn-primary" onclick="openModal('studentModal')">+ Add Student</button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Roll No</th>
+                                <th>Name</th>
+                                <th>Class</th>
+                                <th>Contact</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Fees Section -->
+            <div id="fees" class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Fees Management</h2>
+                    <button class="btn btn-primary" onclick="openModal('feesModal')">+ Add Fee Record</button>
+                </div>
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <h3>Total Fees</h3>
+                        <div class="value" id="totalFees">₹0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Collected</h3>
+                        <div class="value" id="collectedFees">₹0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Pending</h3>
+                        <div class="value" id="pendingFees">₹0</div>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Roll No</th>
+                                <th>Name</th>
+                                <th>Total Fees</th>
+                                <th>Paid</th>
+                                <th>Pending</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="feesTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Library Section -->
+            <div id="library" class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Library Management</h2>
+                    <button class="btn btn-primary" onclick="openModal('libraryModal')">+ Issue Book</button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Roll No</th>
+                                <th>Name</th>
+                                <th>Book Title</th>
+                                <th>Issue Date</th>
+                                <th>Return Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="libraryTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Marks Section -->
+            <div id="marks" class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Marks Management</h2>
+                    <button class="btn btn-primary" onclick="openModal('marksModal')">+ Add Marks</button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Roll No</th>
+                                <th>Name</th>
+                                <th>Math</th>
+                                <th>Science</th>
+                                <th>English</th>
+                                <th>History</th>
+                                <th>Total</th>
+                                <th>Percentage</th>
+                                <th>Grade</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="marksTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Attendance Section -->
+            <div id="attendance" class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Attendance Management</h2>
+                    <button class="btn btn-primary" onclick="openModal('attendanceModal')">+ Mark Attendance</button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Roll No</th>
+                                <th>Name</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendanceTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="studentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Student</h2>
+                <button class="close-btn" onclick="closeModal('studentModal')">&times;</button>
+            </div>
+            <form onsubmit="addStudent(event)">
+                <div class="form-group">
+                    <label>Roll Number</label>
+                    <input type="text" id="rollNo" required>
+                </div>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="studentName" required>
+                </div>
+                <div class="form-group">
+                    <label>Class</label>
+                    <input type="text" id="studentClass" required>
+                </div>
+                <div class="form-group">
+                    <label>Contact</label>
+                    <input type="tel" id="contact" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Add Student</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="feesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add Fee Record</h2>
+                <button class="close-btn" onclick="closeModal('feesModal')">&times;</button>
+            </div>
+            <form onsubmit="addFees(event)">
+                <div class="form-group">
+                    <label>Select Student</label>
+                    <select id="feesStudent" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Total Fees</label>
+                    <input type="number" id="totalAmount" required>
+                </div>
+                <div class="form-group">
+                    <label>Paid Amount</label>
+                    <input type="number" id="paidAmount" required>
+                </div>
+                <div class="form-group">
+                    <label>Due Date</label>
+                    <input type="date" id="dueDate" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Add Fee Record</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="libraryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Issue Book</h2>
+                <button class="close-btn" onclick="closeModal('libraryModal')">&times;</button>
+            </div>
+            <form onsubmit="issueBook(event)">
+                <div class="form-group">
+                    <label>Select Student</label>
+                    <select id="libraryStudent" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Book Title</label>
+                    <input type="text" id="bookTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Issue Date</label>
+                    <input type="date" id="issueDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Return Date</label>
+                    <input type="date" id="returnDate" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Issue Book</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="marksModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add Marks</h2>
+                <button class="close-btn" onclick="closeModal('marksModal')">&times;</button>
+            </div>
+            <form onsubmit="addMarks(event)">
+                <div class="form-group">
+                    <label>Select Student</label>
+                    <select id="marksStudent" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Math (out of 100)</label>
+                    <input type="number" id="mathMarks" min="0" max="100" required>
+                </div>
+                <div class="form-group">
+                    <label>Science (out of 100)</label>
+                    <input type="number" id="scienceMarks" min="0" max="100" required>
+                </div>
+                <div class="form-group">
+                    <label>English (out of 100)</label>
+                    <input type="number" id="englishMarks" min="0" max="100" required>
+                </div>
+                <div class="form-group">
+                    <label>History (out of 100)</label>
+                    <input type="number" id="historyMarks" min="0" max="100" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Add Marks</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="attendanceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Mark Attendance</h2>
+                <button class="close-btn" onclick="closeModal('attendanceModal')">&times;</button>
+            </div>
+            <form onsubmit="markAttendance(event)">
+                <div class="form-group">
+                    <label>Select Student</label>
+                    <select id="attendanceStudent" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="attendanceDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="attendanceStatus" required>
+                        <option value="Present">Present</option>
+                        <option value="Absent">Absent</option>
+                        <option value="Leave">Leave</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Mark Attendance</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
